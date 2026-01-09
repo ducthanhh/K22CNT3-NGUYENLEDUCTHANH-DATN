@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập | Ocean Luxury</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a2540;
+            --gold: #d4af37;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            /* Dùng chung hình nền với trang chủ để đồng bộ */
+            background: linear-gradient(rgba(10, 37, 64, 0.6), rgba(10, 37, 64, 0.8)), 
+                        url('https://images.unsplash.com/photo-1548574505-5e239809ee19?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px); /* Hiệu ứng kính mờ */
+            padding: 50px 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            text-align: center;
+            color: var(--white);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        h2 { margin-bottom: 30px; font-weight: 300; font-size: 1.2rem; opacity: 0.9; }
+
+        .form-group { margin-bottom: 20px; text-align: left; }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--gold);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 30px; /* Bo tròn mềm mại */
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus {
+            box-shadow: 0 0 10px var(--gold);
+            transform: scale(1.02);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: var(--gold);
+            color: var(--primary);
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-login:hover {
+            background: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .links {
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .links a {
+            color: var(--white);
+            text-decoration: none;
+            margin: 0 5px;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+        
+        .links a:hover { color: var(--gold); opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="logo">OCEAN LUXURY</div>
+        <h2>Chào mừng trở lại</h2>
+
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label>Email / Tên đăng nhập</label>
+                <input type="text" name="username" required placeholder="Nhập email của bạn...">
+            </div>
+            
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" name="password" required placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn-login">ĐĂNG NHẬP</button>
+        </form>
+
+      
+           <div class="links">
+    <a href="/">Về trang chủ</a> | <a href="/register">Đăng ký tài khoản mới</a>
+</div>
+        </div>
+    </div>
+
+</body>
+</html>

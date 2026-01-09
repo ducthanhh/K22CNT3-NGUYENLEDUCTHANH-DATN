@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh Toán | Ocean Luxury</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #f4f6f8; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .payment-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 100%; }
+        h2 { color: #0a2540; margin-bottom: 10px; }
+        .amount { font-size: 2rem; color: #d4af37; font-weight: bold; margin: 20px 0; }
+        .qr-code { width: 200px; height: 200px; margin: 20px auto; border: 1px solid #ddd; padding: 10px; border-radius: 10px; }
+        .qr-code img { width: 100%; height: 100%; object-fit: contain; }
+        .note { font-size: 0.9rem; color: #666; margin-bottom: 30px; }
+        .btn-confirm { background: #28a745; color: white; border: none; padding: 15px 30px; border-radius: 30px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; font-size: 1rem;}
+        .btn-confirm:hover { background: #218838; transform: translateY(-3px); }
+    </style>
+</head>
+<body>
+
+    <div class="payment-card">
+        <h2>Cổng Thanh Toán</h2>
+        <p>Mã đơn hàng: <strong id="order-id">#...</strong></p>
+        
+        <div class="amount" id="amount-display">0 ₫</div>
+        
+        <div class="qr-code">
+            <img id="qr-img" src="https://via.placeholder.com/200?text=QR+Code" alt="QR Code">
+        </div>
+
+        <p class="note">Vui lòng quét mã trên bằng App Ngân hàng để thanh toán.</p>
+
+        <form action="/confirm-payment" method="POST">
+            <input type="hidden" name="booking_id" id="input-booking-id">
+            <input type="hidden" name="amount" id="input-amount">
+            <button type="submit" class="btn-confirm">TÔI ĐÃ CHUYỂN KHOẢN</button>
+        </form>
+    </div>
+
+    <script>
+        // Lấy ID đơn hàng và số tiền từ URL
+        const params = new URLSearchParams(window.location.search);
+        const bookingId = params.get('id');
+        const price = params.get('price');
+
+        document.getElementById('order-id').innerText = '#' + bookingId;
+        document.getElementById('amount-display').innerText = Number(price).toLocaleString('vi-VN') + ' ₫';
+        
+        document.getElementById('input-booking-id').value = bookingId;
+        document.getElementById('input-amount').value = price;
+
+        // Tạo mã QR thật (Dùng API VietQR)
+        const qrUrl = `https://img.vietqr.io/image/VCB-123456789-compact2.png?amount=${price}&addInfo=Thanh toan don ${bookingId}&accountName=OCEAN LUXURY`;
+        document.getElementById('qr-img').src = qrUrl;
+    </script>
+</body>
+</html>

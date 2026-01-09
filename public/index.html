@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Luxury Cruises | Trải Nghiệm Thượng Lưu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- 1. CÀI ĐẶT CHUNG --- */
+        :root {
+            --primary: #0a2540; /* Xanh biển sâu */
+            --gold: #d4af37;    /* Vàng kim loại */
+            --white: #ffffff;
+            --text-light: #f4f4f4;
+            --text-dark: #333;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* --- 2. HEADER & NAV --- */
+        header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo { font-size: 1.8rem; font-weight: bold; color: var(--gold); }
+        
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a:hover { color: var(--gold); }
+        .btn-cta {
+            padding: 10px 25px;
+            background: var(--gold);
+            color: var(--primary);
+            border-radius: 30px;
+            font-weight: bold;
+        }
+        .btn-cta:hover { background: #b59226; }
+
+        /* --- 3. HERO SECTION (PHẦN MỞ ĐẦU) --- */
+        .hero {
+            height: 90vh;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1548574505-5e239809ee19?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .hero-content h1 { font-size: 4rem; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .hero-content p { font-size: 1.5rem; margin-bottom: 40px; }
+        .btn-hero {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: var(--gold);
+            color: var(--primary);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+            transition: transform 0.2s;
+        }
+        .btn-hero:hover { transform: translateY(-3px); }
+
+        /* --- 4. CÁC CHUYẾN ĐI (TOURS) --- */
+        .section-title { text-align: center; margin: 80px 0 50px; color: var(--primary); font-size: 2.5rem; }
+        
+        .tours-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .tour-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .tour-card:hover { transform: translateY(-10px); }
+
+        .tour-img {
+            height: 250px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .tour-info { padding: 25px; }
+        .tour-info h3 { color: var(--primary); margin-bottom: 10px; }
+        .price { color: var(--gold); font-weight: bold; font-size: 1.2rem; margin-top: 15px; display: block; }
+
+        /* --- 5. FORM ĐẶT VÉ (BOOKING) --- */
+        .booking-section {
+            background-color: var(--primary);
+            padding: 80px 20px;
+            margin-top: 80px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .booking-form {
+            background: rgba(255, 255, 255, 0.1); /* Hiệu ứng kính */
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 800px;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .booking-form h2 { text-align: center; margin-bottom: 30px; color: var(--gold); }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 300; }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.9);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .full-width { grid-column: span 2; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: var(--gold);
+            color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-submit:hover { background: #fff; }
+
+        /* --- 6. FOOTER --- */
+        footer {
+            background: #051a2e;
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 0;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.5rem; }
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .nav-links { display: none; } /* Ẩn menu trên mobile cho gọn */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">đức thành tour</div>
+            <ul class="nav-links">
+                <li><a href="#home">Trang Chủ</a></li>
+                <li><a href="#tours">Hải Trình</a></li>
+                <li><a href="#about">Về Chúng Tôi</a></li>
+                <li><a href="/login" style="color: var(--gold);">Đăng Nhập</a></li>
+            </ul>
+            <a href="#booking" class="btn-cta">Đặt Ngay</a>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Đánh Thức Giấc Mơ khám phá sông đà</h1>
+            <p>Hành trình 5 sao đẳng cấp thế giới đang chờ đón bạn</p>
+            <button class="btn-hero" onclick="document.getElementById('booking').scrollIntoView({behavior: 'smooth'})">Đặt Lịch Ngay</button>
+        </div>
+    </section>
+
+    <h2 id="tours" class="section-title">Các Điểm Đến Nổi Bật</h2>
+    <div class="tours-container">
+        <div class="tour-card">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Biển Đông" class="tour-img">
+            <div class="tour-info">
+                <h3>Khám Phá Biển Đông</h3>
+                <p>3 Ngày 2 Đêm - Trải nghiệm vẻ đẹp hoang sơ của những hòn đảo nhiệt đới.</p>
+                <span class="price">Từ 5.000.000 VNĐ/khách</span>
+            </div>
+        </div>
+        
+        <div class="tour-card">
+            <img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Cinque Terre" class="tour-img">
+            <div class="tour-info">
+                <h3>Địa Trung Hải Lãng Mạn</h3>
+                <p>7 Ngày 6 Đêm - Hành trình qua Ý, Hy Lạp và Pháp đầy mộng mơ.</p>
+                <span class="price">Từ 35.000.000 VNĐ/khách</span>
+            </div>
+        </div>
+
+        <div class="tour-card">
+            <img src="https://images.unsplash.com/photo-1596436889106-be35e843f974?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Maldives" class="tour-img">
+            <div class="tour-info">
+                <h3>Thiên Đường Maldives</h3>
+                <p>5 Ngày 4 Đêm - Tận hưởng sự riêng tư tuyệt đối giữa đại dương.</p>
+                <span class="price">Từ 25.000.000 VNĐ/khách</span>
+            </div>
+        </div>
+    </div>
+
+    <section id="booking" class="booking-section">
+        <form action="/dat-ve" method="POST" class="booking-form">
+            <h2>Đặt Vé Trực Tuyến</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Họ và tên quý khách</label>
+                    <input type="text" name="ho_ten" required placeholder="Nhập họ tên...">
+                </div>
+                
+                <div class="form-group">
+                    <label>Email liên hệ</label>
+                    <input type="email" name="email" required placeholder="email@vidu.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    <input type="tel" name="sdt" required placeholder="0912...">
+                </div>
+
+                <div class="form-group">
+    <label>Chọn Hành Trình</label>
+    <select name="schedule_id" id="select-lich-trinh" required>
+        <option value="">-- Đang tải lịch trình... --</option>
+    </select>
+</div>
+
+                <div class="form-group">
+                    <label>Ngày khởi hành</label>
+                    <input type="date" name="ngay_di" required>
+                </div>
+
+                <div class="form-group">
+    <label>Số lượng khách <span id="seat-info" style="color: yellow; font-size: 0.9em;">(Đang kiểm tra chỗ...)</span></label>
+    <input type="number" id="inp-so-khach" name="so_khach" value="1" min="1" required>
+</div>
+
+<div class="form-group full-width" style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; text-align: right;">
+    <label style="display:inline;">Tạm tính:</label>
+    <span id="display-total" style="font-size: 1.5rem; color: #d4af37; font-weight: bold;">0 ₫</span>
+</div>
+
+                <div class="form-group full-width">
+                    <label>Ghi chú đặc biệt (Ăn chay, phòng VIP...)</label>
+                    <textarea name="ghi_chu" rows="3"></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <button type="submit" class="btn-submit">XÁC NHẬN ĐẶT CHỖ</button>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <footer>
+         <section id="about" class="about-section"></section>
+        <p>&copy; hòa bình việt nam</p>
+        <p>Địa chỉ: THUNG NAI HÒA BÌNH VIỆT NAM | Hotline: 1900 1234</p>
+    </footer>
+<script>
+    // 1. XỬ LÝ HIỂN THỊ MENU NGƯỜI DÙNG (Giữ nguyên logic cũ)
+    fetch('/api/current-user')
+        .then(res => res.json())
+        .then(user => {
+            const navLinks = document.querySelector('.nav-links');
+            if (user) {
+                let menuHtml = `<li><a href="/">Trang Chủ</a></li><li><a href="#tours">Hải Trình</a></li>`;
+                if (user.role === 'admin') {
+                    menuHtml += `<li><a href="/admin" style="color: red; font-weight:bold;">QUẢN TRỊ VIÊN</a></li>`;
+                } else {
+                    menuHtml += `<li><a href="/my-tickets">Vé Của Tôi</a></li>`;
+                }
+                menuHtml += `<li><span style="color: var(--gold);">Chào, ${user.full_name}</span></li><li><a href="/logout">Thoát</a></li>`;
+                navLinks.innerHTML = menuHtml;
+
+                // Điền thông tin vào form
+                const nameInput = document.querySelector('input[name="ho_ten"]');
+                const emailInput = document.querySelector('input[name="email"]');
+                const phoneInput = document.querySelector('input[name="sdt"]');
+                if(nameInput) nameInput.value = user.full_name;
+                if(emailInput) emailInput.value = user.email;
+                if(phoneInput) phoneInput.value = user.phone;
+            }
+        });
+</script>
+
+<script>
+    // 2. XỬ LÝ CHỌN CHUYẾN ĐI VÀ TÍNH GIÁ (LOGIC MỚI)
+    
+    // Khai báo các biến toàn cục
+    let currentPrice = 0;
+    let maxSeats = 0;
+
+    // Lấy các thẻ HTML cần dùng
+    const selectLichTrinh = document.getElementById('select-lich-trinh');
+    const inpSoKhach = document.getElementById('inp-so-khach');
+    const txtSeatInfo = document.getElementById('seat-info');
+    const txtTotal = document.getElementById('display-total');
+    const btnSubmit = document.querySelector('.btn-submit');
+
+    // BƯỚC 1: Tải danh sách chuyến đi vào ô Select khi trang vừa mở
+    fetch('/api/schedules-list')
+        .then(res => res.json())
+        .then(data => {
+            selectLichTrinh.innerHTML = '<option value="">-- Vui lòng chọn chuyến đi --</option>';
+            
+            if (data.length === 0) {
+                selectLichTrinh.innerHTML = '<option value="">Hiện chưa có chuyến nào</option>';
+                return;
+            }
+
+            data.forEach(trip => {
+                const option = document.createElement('option');
+                option.value = trip.schedule_id; // Giá trị gửi đi là ID
+                
+                // Hiển thị tên đẹp: "Hòa Bình -> Thác Bờ (08:00 - Tàu 01)"
+                const time = new Date(trip.departure_time).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
+                option.text = `${trip.diem_di} ➝ ${trip.diem_den} (${time} - ${trip.ship_name})`;
+                selectLichTrinh.appendChild(option);
+            });
+        });
+
+    // BƯỚC 2: Khi người dùng CHỌN 1 chuyến đi -> Hỏi Server giá tiền
+    selectLichTrinh.addEventListener('change', function() {
+        const scheduleId = this.value;
+
+        // Nếu người dùng chọn mục mặc định (Rỗng)
+        if (!scheduleId) {
+            resetForm();
+            return;
+        }
+
+        txtSeatInfo.innerText = "(Đang lấy giá vé...)";
+
+        // Gửi ID lên server để lấy giá: /api/schedule-info?id=...
+        fetch(`/api/schedule-info?id=${scheduleId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    alert("Không lấy được thông tin chuyến này!");
+                    return;
+                }
+
+                // Cập nhật dữ liệu vào biến
+                currentPrice = data.price;
+                maxSeats = data.remaining;
+
+                // Cập nhật giao diện
+                if (maxSeats <= 0) {
+                    txtSeatInfo.innerText = "(ĐÃ HẾT CHỖ)";
+                    txtSeatInfo.style.color = "red";
+                    btnSubmit.disabled = true;
+                    btnSubmit.innerText = "HẾT VÉ";
+                    btnSubmit.style.background = "gray";
+                    inpSoKhach.disabled = true;
+                } else {
+                    txtSeatInfo.innerText = `(Còn lại: ${maxSeats} chỗ - Giá: ${currentPrice.toLocaleString()}đ/vé)`;
+                    txtSeatInfo.style.color = "#d4af37"; // Màu vàng
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerText = "XÁC NHẬN ĐẶT CHỖ";
+                    btnSubmit.style.background = "var(--gold)";
+                    inpSoKhach.disabled = false;
+                    inpSoKhach.max = maxSeats; // Giới hạn số nhập vào
+                    
+                    // Tính lại tổng tiền ngay lập tức
+                    calculateTotal();
+                }
+            });
+    });
+
+    // BƯỚC 3: Khi người dùng thay đổi SỐ LƯỢNG KHÁCH -> Tính lại tổng tiền
+    inpSoKhach.addEventListener('input', calculateTotal);
+
+    function calculateTotal() {
+        let quantity = parseInt(inpSoKhach.value) || 0;
+
+        // Kiểm tra không cho nhập quá số ghế
+        if (quantity > maxSeats && maxSeats > 0) {
+            alert(`Chỉ còn ${maxSeats} chỗ thôi ạ!`);
+            inpSoKhach.value = maxSeats;
+            quantity = maxSeats;
+        }
+
+        // Tính tiền: Số khách * Giá vé hiện tại
+        const total = quantity * currentPrice;
+        txtTotal.innerText = total.toLocaleString('vi-VN') + ' ₫';
+    }
+
+    // Hàm dọn dẹp form khi chưa chọn gì
+    function resetForm() {
+        currentPrice = 0;
+        maxSeats = 0;
+        txtSeatInfo.innerText = "(Vui lòng chọn chuyến)";
+        txtSeatInfo.style.color = "yellow";
+        txtTotal.innerText = "0 ₫";
+    }
+</script>
+</body>
+</html>

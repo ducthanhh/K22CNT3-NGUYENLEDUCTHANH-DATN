@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Vé Của Tôi | </title>
+    <style>
+        /* Tận dụng lại CSS cũ cho nhanh, chỉ chỉnh lại chút */
+        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        h1 { color: #0a2540; border-bottom: 2px solid #d4af37; padding-bottom: 10px; }
+        .ticket { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .ticket:hover { background: #f9f9f9; border-color: #d4af37; }
+        .status { padding: 5px 10px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; }
+        .pending { background: #fff3cd; color: #856404; }
+        .confirmed { background: #d4edda; color: #155724; }
+        .btn-home { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #0a2540; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="btn-home">← Quay lại trang chủ</a>
+        <h1>Lịch Sử Đặt Vé Của Bạn</h1>
+        <div id="ticket-list">Loading...</div>
+    </div>
+
+    <script>
+        fetch('/api/my-booking-history')
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('ticket-list');
+                if(data.length === 0) {
+                    container.innerHTML = "<p>Bạn chưa đặt chuyến đi nào.</p>";
+                    return;
+                }
+                container.innerHTML = data.map(t => `
+                    <div class="ticket">
+                        <div>
+                            <h3>${t.from_city} ➝ ${t.to_city}</h3>
+                            <p>Khởi hành: ${new Date(t.departure_time).toLocaleString('vi-VN')}</p>
+                            <p>Mã vé: <strong>#${t.booking_id}</strong></p>
+                        </div>
+                        <div style="text-align: right;">
+                            <span class="status ${t.status}">${t.status.toUpperCase()}</span>
+                            <p style="margin-top:10px; color: #d4af37; font-weight:bold;">${Number(t.total_price).toLocaleString()} đ</p>
+                        </div>
+                    </div>
+                `).join('');
+            });
+    </script>
+</body>
+</html>
