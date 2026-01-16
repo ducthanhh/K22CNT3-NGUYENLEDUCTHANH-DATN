@@ -194,6 +194,82 @@
             .full-width { grid-column: span 1; }
             .nav-links { display: none; } /* Ẩn menu trên mobile cho gọn */
         }
+
+
+
+
+        /* ===== FOOTER MỞ RỘNG ===== */
+.main-footer {
+    background: #051a2e;
+    color: rgba(255,255,255,0.8);
+    padding-top: 60px;
+    font-size: 0.95rem;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 40px;
+}
+
+.footer-col h3,
+.footer-col h4 {
+    color: var(--gold);
+    margin-bottom: 20px;
+    font-family: 'Playfair Display', serif;
+}
+
+.footer-col p {
+    line-height: 1.8;
+}
+
+.footer-col ul li {
+    margin-bottom: 10px;
+}
+
+.footer-col ul li a {
+    color: rgba(255,255,255,0.8);
+}
+
+.footer-col ul li a:hover {
+    color: var(--gold);
+    padding-left: 5px;
+}
+
+.social-links a {
+    display: inline-block;
+    margin-right: 15px;
+    color: var(--gold);
+    font-weight: bold;
+}
+
+.social-links a:hover {
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding: 30px 10px;
+    margin-top: 40px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.6);
+}
+
+/* Responsive footer */
+@media (max-width: 768px) {
+    .footer-container {
+        text-align: center;
+    }
+    .social-links a {
+        display: block;
+        margin: 8px 0;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -302,11 +378,62 @@
         </form>
     </section>
 
-    <footer>
-         <section id="about" class="about-section"></section>
-        <p>&copy; hòa bình việt nam</p>
-        <p>Địa chỉ: THUNG NAI HÒA BÌNH VIỆT NAM | Hotline: 1900 1234</p>
-    </footer>
+    <footer class="main-footer">
+    <div class="footer-container">
+
+        <!-- CỘT 1: GIỚI THIỆU -->
+        <div class="footer-col">
+            <h3>ĐỨC THÀNH TOUR</h3>
+            <p>
+                Đức Thành Tour chuyên cung cấp dịch vụ du lịch tàu tham quan
+                sông Đà – Thung Nai – Đền Thác Bờ với trải nghiệm an toàn,
+                chuyên nghiệp và đẳng cấp.
+            </p>
+        </div>
+
+        <!-- CỘT 2: LIÊN KẾT NHANH -->
+        <div class="footer-col">
+            <h4>Liên Kết Nhanh</h4>
+            <ul>
+                <li><a href="#home">Trang chủ</a></li>
+                <li><a href="#tours">Lịch trình</a></li>
+                <li><a href="#booking">Đặt vé</a></li>
+                <li><a href="#about">Về chúng tôi</a></li>
+                <li><a href="/login">Đăng nhập</a></li>
+            </ul>
+        </div>
+
+        <!-- CỘT 3: THÔNG TIN LIÊN HỆ -->
+        <div class="footer-col">
+            <h4>Thông Tin Liên Hệ</h4>
+            <p>📍 Thung Nai, Cao Phong, Hòa Bình</p>
+            <p>📞 Hotline: 1900 1234</p>
+            <p>✉️ Email: ducthanhtour@gmail.com</p>
+            <p>⏰ Giờ làm việc: 07:00 – 21:00</p>
+        </div>
+
+        <!-- CỘT 4: MẠNG XÃ HỘI -->
+        <div class="footer-col">
+            <h4>Kết Nối Với Chúng Tôi</h4>
+            <div class="social-links">
+                <a href="#">Facebook</a>
+                <a href="#">Zalo</a>
+                <a href="#">Instagram</a>
+                <a href="#">YouTube</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BẢN QUYỀN -->
+    <div class="footer-bottom">
+        <p>
+            © 2025 Đức Thành Tour | Website đặt lịch tàu du lịch sông Đà  
+            <br>
+        </p>
+    </div>
+</footer>
+
 <script>
     // 1. XỬ LÝ HIỂN THỊ MENU NGƯỜI DÙNG (Giữ nguyên logic cũ)
     fetch('/api/current-user')
