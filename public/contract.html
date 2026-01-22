@@ -1,60 +1,201 @@
-<h2>HỢP ĐỒNG DỊCH VỤ DU LỊCH SÔNG ĐÀ</h2>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Hợp Đồng Dịch Vụ | Ocean Luxury</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* 1. Reset & Nền tảng */
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background: #f0f2f5; 
+            margin: 0; 
+            padding: 40px 20px;
+            color: #333;
+        }
 
-<pre id="content" style="background:#f5f5f5;padding:15px;white-space:pre-wrap"></pre>
+        /* 2. Khung hợp đồng (Dạng tờ giấy) */
+        .contract-wrapper {
+            max-width: 850px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 60px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            position: relative;
+            border-top: 10px solid #0a2540; /* Màu xanh navy đặc trưng */
+        }
 
-<label>
-  <input type="checkbox" id="agree">
-  Tôi đồng ý với các điều khoản trên
-</label>
-<br><br>
+        /* 3. Tiêu đề */
+        h2 {
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            color: #0a2540;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #d4af37; /* Màu vàng gold */
+            padding-bottom: 20px;
+        }
 
-<button onclick="acceptContract()">Xác nhận & Thanh toán</button>
+        /* 4. Nội dung văn bản */
+        #contract-content {
+            white-space: pre-wrap; /* Giữ xuống dòng tự nhiên */
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #444;
+            background: #fdfdfd;
+            padding: 30px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            height: 400px;
+            overflow-y: auto; /* Tạo thanh cuộn nếu hợp đồng dài */
+        }
+
+        /* Tùy chỉnh thanh cuộn cho đẹp */
+        #contract-content::-webkit-scrollbar { width: 6px; }
+        #contract-content::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 10px; }
+
+        /* 5. Khu vực xác nhận (Checkbox) */
+        .agreement-area {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .agreement-area input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            accent-color: #0a2540;
+        }
+
+        .agreement-area label {
+            font-weight: 600;
+            cursor: pointer;
+            color: #555;
+        }
+
+        /* 6. Nút bấm */
+        .btn-container {
+            text-align: center;
+        }
+
+        button {
+            background: #0a2540;
+            color: white;
+            border: none;
+            padding: 16px 50px;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(10, 37, 64, 0.3);
+        }
+
+        button:hover {
+            background: #d4af37;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* 7. Trang trí thêm dấu mộc ảo */
+        .stamp-preview {
+            position: absolute;
+            bottom: 150px;
+            right: 80px;
+            width: 120px;
+            height: 120px;
+            border: 4px double #c0392b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c0392b;
+            font-weight: bold;
+            font-size: 12px;
+            text-align: center;
+            transform: rotate(-20deg);
+            opacity: 0.2;
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+<div class="contract-wrapper">
+    <div class="stamp-preview">ducthanhtour<br>Official Contract</div>
+    
+    <h2>HỢP ĐỒNG DỊCH VỤ DU LỊCH SÔNG ĐÀ</h2>
+
+    <pre id="contract-content">Đang tải nội dung hợp đồng...</pre>
+
+    <div class="agreement-area">
+        <input type="checkbox" id="agree">
+        <label for="agree">Tôi đã đọc, hiểu rõ và đồng ý với các điều khoản trên</label>
+    </div>
+
+    <div class="btn-container">
+        <button onclick="acceptContract()">Xác nhận & Thanh toán</button>
+    </div>
+</div>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-const bookingId = params.get('id');
+    // Giữ nguyên logic JavaScript cũ của bạn
+    const params = new URLSearchParams(window.location.search);
+    const bookingId = params.get('id');
 
-if (!bookingId) {
-    alert('Không tìm thấy booking!');
-}
-
-// 👉 Load hợp đồng
-fetch(`/api/contract/${bookingId}`)
-    .then(res => res.json())
-    .then(contract => {
-        if (!contract) {
-            document.getElementById('content').innerText =
-                'Không tìm thấy hợp đồng';
-            return;
-        }
-        document.getElementById('content').innerText =
-            contract.contract_content;
-    });
-
-// 👉 Xác nhận hợp đồng
-function acceptContract() {
-    const agree = document.getElementById('agree').checked;
-
-    if (!agree) {
-        alert('Bạn phải đồng ý hợp đồng!');
-        return;
+    if (!bookingId) {
+        alert('Không tìm thấy booking!');
     }
 
-    fetch('/api/accept-contract', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ booking_id: bookingId })
-    })
-    .then(res => res.json())
-    .then(r => {
-        console.log('API response:', r); // 🔥 DEBUG
+    fetch(`/api/contract/${bookingId}`)
+        .then(res => res.json())
+        .then(contract => {
+            if (!contract) {
+                document.getElementById('contract-content').innerText = 'Không tìm thấy hợp đồng';
+                return;
+            }
+            document.getElementById('contract-content').innerText = contract.contract_content;
+        });
 
-        if (r.success) {
-            window.location.href = `/payment-page?id=${bookingId}`;
-        } else {
-            alert('Không thể xác nhận hợp đồng!');
+    function acceptContract() {
+        if (!document.getElementById('agree').checked) {
+            alert('Bạn phải đồng ý điều khoản trước!');
+            return;
         }
-    });
-}
 
+        fetch('/api/accept-contract', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ booking_id: bookingId })
+        })
+        .then(res => res.json())
+        .then(r => {
+            if (r.success) {
+                window.location.href = `/payment-page?id=${bookingId}`;
+            } else {
+                alert('Không thể xác nhận hợp đồng');
+            }
+        });
+    }
 </script>
+
+</body>
+</html>

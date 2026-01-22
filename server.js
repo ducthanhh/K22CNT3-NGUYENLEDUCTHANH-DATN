@@ -53,30 +53,35 @@ app.get('/payment-page', checkLogin, (req, res) => {
     }
 
     const sql = `
-        SELECT * FROM bookings 
-        WHERE booking_id = ? 
-          AND user_id = ?
-          AND contract_accepted = 1
+        SELECT b.booking_id, b.total_price 
+        FROM bookings b
+        WHERE b.booking_id = ? 
+          AND b.user_id = ?
+          AND b.contract_accepted = 1
     `;
 
-    db.query(
-        sql,
-        [bookingId, req.session.user.user_id],
-        (err, results) => {
-            if (err) {
-                console.error(err);
-                return res.send("Lỗi server");
-            }
-
-            // ❌ Không tồn tại hoặc chưa chấp thuận hợp đồng
-            if (results.length === 0) {
-                return res.redirect(`/contract?id=${bookingId}`);
-            }
-
-            // ✅ OK → cho thanh toán
-            res.sendFile(__dirname + '/public/payment.html');
+    db.query(sql, [bookingId, req.session.user.user_id], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Lỗi server");
         }
-    );
+
+        if (results.length === 0) {
+            // Nếu chưa chấp thuận hợp đồng hoặc không tìm thấy, quay lại trang hợp đồng
+            return res.redirect(`/contract?id=${bookingId}`);
+        }
+
+        // Lấy giá tiền từ Database
+        const totalPrice = results[0].total_price;
+
+        // Quan trọng: Gửi file payment.html nhưng phải đính kèm giá tiền lên URL để Frontend lấy được
+        // Chúng ta redirect chính nó kèm tham số price nếu chưa có
+        if (!req.query.price) {
+            return res.redirect(`/payment-page?id=${bookingId}&price=${totalPrice}`);
+        }
+
+        res.sendFile(__dirname + '/public/payment.html');
+    });
 });
 
 
@@ -418,6 +423,44 @@ app.get('/api/admin/schedules', checkLogin, checkAdmin, (req, res) => {
         res.json(results);
     });
 });
+
+
+app.get('/api/booking/:id/ready-to-pay', checkLogin, (req, res) => {
+    const bookingId = req.params.id;
+
+    db.query(`
+        SELECT b.booking_id, b.status, b.contract_accepted, b.total_price,
+               p.payment_id
+        FROM bookings b
+        LEFT JOIN payments p ON b.booking_id = p.booking_id
+        WHERE b.booking_id = ?
+    `, [bookingId], (err, rows) => {
+        if (rows.length === 0) {
+            return res.json({ ready: false, message: 'Booking không tồn tại' });
+        }
+
+        const b = rows[0];
+
+        if (b.status !== 'pending') {
+            return res.json({ ready: false, message: 'Booking không ở trạng thái chờ' });
+        }
+
+        if (b.contract_accepted !== 1) {
+            return res.json({ ready: false, message: 'Chưa đồng ý hợp đồng' });
+        }
+
+        if (b.payment_id) {
+            return res.json({ ready: false, message: 'Đã thanh toán' });
+        }
+
+        // ✅ TRẢ VỀ GIÁ TIỀN
+        res.json({
+            ready: true,
+            amount: b.total_price
+        });
+    });
+});
+
 // 7. [MỚI] API: Xóa lịch trình
 app.post('/api/admin/delete-schedule', checkLogin, checkAdmin, (req, res) => {
     const { schedule_id } = req.body;
@@ -579,6 +622,58 @@ app.post('/api/user/change-date', (req, res) => {
         res.json({ success: true });
     });
 });
+app.post('/confirm-payment', checkLogin, (req, res) => {
+    const { booking_id, amount } = req.body;
+
+    // 1. Đánh dấu booking đã xác nhận
+    db.query(
+        "UPDATE bookings SET status = 'confirmed' WHERE booking_id = ?",
+        [booking_id],
+        (err) => {
+            if (err) return res.send("Lỗi cập nhật booking");
+
+            // 2. Lưu payment
+            db.query(
+                `INSERT INTO payments (booking_id, amount, payment_method, status)
+                 VALUES (?, ?, 'bank_transfer', 'success')`,
+                [booking_id, amount],
+                () => {
+                    res.send(`
+                        <h1>✅ THANH TOÁN THÀNH CÔNG</h1>
+                        <a href="/">Về trang chủ</a>
+                    `);
+                }
+            );
+        }
+    );
+});
+
+
+app.post('/api/create-payment', async (req, res) => {
+    const { booking_id } = req.body;
+
+    // Lấy thông tin booking
+    const [[booking]] = await db.query(`
+        SELECT total_price FROM bookings WHERE booking_id=?
+    `, [booking_id]);
+
+    if (!booking) {
+        return res.status(400).json({ error: 'Booking không tồn tại' });
+    }
+
+    // Tạo record payment PENDING
+    await db.query(`
+        INSERT INTO payments (booking_id, amount, payment_method, gateway, status)
+        VALUES (?, ?, 'bank_transfer', 'vietqr', 'pending')
+    `, [booking_id, booking.total_price]);
+
+    // Trả link QR / trang thanh toán
+    res.json({
+        success: true,
+        redirect: `/payment-page?id=${booking_id}&price=${booking.total_price}`
+    });
+});
+
 
 // --- CHẠY SERVER ---
 app.listen(port, () => console.log(`🚀 Server đang chạy tại: http://localhost:${port}`));
