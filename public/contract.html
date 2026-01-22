@@ -1,0 +1,60 @@
+<h2>HỢP ĐỒNG DỊCH VỤ DU LỊCH SÔNG ĐÀ</h2>
+
+<pre id="content" style="background:#f5f5f5;padding:15px;white-space:pre-wrap"></pre>
+
+<label>
+  <input type="checkbox" id="agree">
+  Tôi đồng ý với các điều khoản trên
+</label>
+<br><br>
+
+<button onclick="acceptContract()">Xác nhận & Thanh toán</button>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const bookingId = params.get('id');
+
+if (!bookingId) {
+    alert('Không tìm thấy booking!');
+}
+
+// 👉 Load hợp đồng
+fetch(`/api/contract/${bookingId}`)
+    .then(res => res.json())
+    .then(contract => {
+        if (!contract) {
+            document.getElementById('content').innerText =
+                'Không tìm thấy hợp đồng';
+            return;
+        }
+        document.getElementById('content').innerText =
+            contract.contract_content;
+    });
+
+// 👉 Xác nhận hợp đồng
+function acceptContract() {
+    const agree = document.getElementById('agree').checked;
+
+    if (!agree) {
+        alert('Bạn phải đồng ý hợp đồng!');
+        return;
+    }
+
+    fetch('/api/accept-contract', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ booking_id: bookingId })
+    })
+    .then(res => res.json())
+    .then(r => {
+        console.log('API response:', r); // 🔥 DEBUG
+
+        if (r.success) {
+            window.location.href = `/payment-page?id=${bookingId}`;
+        } else {
+            alert('Không thể xác nhận hợp đồng!');
+        }
+    });
+}
+
+</script>

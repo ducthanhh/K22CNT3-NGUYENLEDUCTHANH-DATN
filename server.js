@@ -1,3 +1,4 @@
+
 const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
@@ -7,6 +8,8 @@ const port = 3000;
 
 // --- 1. CẤU HÌNH SERVER ---
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.use(express.static('public'));
 app.use(session({
     secret: 'mat_khau_bi_mat_cua_rieng_ban',
@@ -42,7 +45,45 @@ function checkAdmin(req, res, next) {
 // --- 4. CÁC ROUTE TRANG HTML ---
 app.get('/login', (req, res) => res.sendFile(__dirname + '/public/login.html'));
 app.get('/register', (req, res) => res.sendFile(__dirname + '/public/register.html'));
-app.get('/payment-page', (req, res) => res.sendFile(__dirname + '/public/payment.html'));
+app.get('/payment-page', checkLogin, (req, res) => {
+    const bookingId = req.query.id;
+
+    if (!bookingId) {
+        return res.send("Thiếu booking ID");
+    }
+
+    const sql = `
+        SELECT * FROM bookings 
+        WHERE booking_id = ? 
+          AND user_id = ?
+          AND contract_accepted = 1
+    `;
+
+    db.query(
+        sql,
+        [bookingId, req.session.user.user_id],
+        (err, results) => {
+            if (err) {
+                console.error(err);
+                return res.send("Lỗi server");
+            }
+
+            // ❌ Không tồn tại hoặc chưa chấp thuận hợp đồng
+            if (results.length === 0) {
+                return res.redirect(`/contract?id=${bookingId}`);
+            }
+
+            // ✅ OK → cho thanh toán
+            res.sendFile(__dirname + '/public/payment.html');
+        }
+    );
+});
+
+
+app.get('/contract', checkLogin, (req, res) => {
+    res.sendFile(__dirname + '/public/contract.html');
+});
+
 
 app.get('/admin', checkLogin, checkAdmin, (req, res) => {
     res.sendFile(__dirname + '/public/admin.html');
@@ -111,6 +152,31 @@ app.post('/register', (req, res) => {
     });
 });
 
+app.get('/api/contract/:bookingId', checkLogin, (req, res) => {
+    db.query(
+        "SELECT * FROM contracts WHERE booking_id = ?",
+        [req.params.bookingId],
+        (err, rows) => {
+            if (rows.length === 0) return res.json(null);
+            res.json(rows[0]);
+        }
+    );
+});
+
+app.get('/api/admin/contracts', checkLogin, checkAdmin, (req, res) => {
+    const sql = `
+        SELECT c.contract_id, c.accepted, c.accepted_at,
+               u.full_name, u.email,
+               b.booking_id, b.total_price
+        FROM contracts c
+        JOIN bookings b ON c.booking_id = b.booking_id
+        JOIN users u ON b.user_id = u.user_id
+        ORDER BY c.created_at DESC
+    `;
+    db.query(sql, (err, results) => res.json(results));
+});
+
+
 // Xử lý Đăng Nhập
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
@@ -172,7 +238,33 @@ app.post('/dat-ve', (req, res) => {
                 
                 db.query(sqlInsert, [uId, schedule_id, so_khach, tong_tien], (err, result) => {
                     if (err) return res.status(500).send("Lỗi lưu vé: " + err.message);
-                    res.redirect(`/payment-page?id=${result.insertId}&price=${tong_tien}`);
+                    const bookingId = result.insertId;
+
+const contractText = `
+HỢP ĐỒNG DỊCH VỤ DU LỊCH SÔNG ĐÀ
+
+Khách hàng: ${ho_ten}
+Số điện thoại: ${sdt}
+Email: ${email}
+Số khách: ${so_khach}
+Tổng tiền: ${tong_tien} VNĐ
+
+Điều khoản:
+- Vé không hoàn sau khi thanh toán
+- Khách đến trước 15 phút
+
+Hai bên đồng ý thực hiện hợp đồng.
+`;
+
+db.query(
+    "INSERT INTO contracts (booking_id, contract_content) VALUES (?, ?)",
+    [bookingId, contractText]
+);
+
+// 👉 chuyển sang xem hợp đồng
+res.redirect(`/contract?id=${bookingId}`);
+
+
                 });
             });
         }
@@ -188,6 +280,33 @@ app.post('/confirm-payment', (req, res) => {
         });
     });
 });
+
+app.post('/api/accept-contract', checkLogin, (req, res) => {
+    const { booking_id } = req.body;
+
+    if (!booking_id) {
+        return res.json({ success: false, message: 'Thiếu booking_id' });
+    }
+
+    db.query(
+        "UPDATE contracts SET accepted = 1, accepted_at = NOW(), accepted_ip = ? WHERE booking_id = ?",
+        [req.ip, booking_id],
+        (err, result) => {
+            if (err || result.affectedRows === 0) {
+                return res.json({ success: false });
+            }
+
+            db.query(
+                "UPDATE bookings SET contract_accepted = 1 WHERE booking_id = ?",
+                [booking_id],
+                () => {
+                    res.json({ success: true });
+                }
+            );
+        }
+    );
+});
+
 
 // --- API CHO ADMIN (THỐNG KÊ & QUẢN LÝ) ---
 app.get('/api/admin/stats', checkLogin, checkAdmin, (req, res) => {
@@ -305,6 +424,158 @@ app.post('/api/admin/delete-schedule', checkLogin, checkAdmin, (req, res) => {
     // (Tùy chọn) Kiểm tra vé đã đặt trước khi xóa
     db.query("DELETE FROM schedules WHERE schedule_id = ?", [schedule_id], (err) => {
         if (err) return res.json({ error: true });
+        res.json({ success: true });
+    });
+});
+
+app.post('/api/user/update-booking', (req, res) => {
+    const userId = req.session.user.user_id;
+    const { booking_id, number_of_tickets } = req.body;
+
+    const sql = `
+        UPDATE bookings b
+        JOIN schedules s ON b.schedule_id = s.schedule_id
+        SET 
+            b.number_of_tickets = ?,
+            b.total_price = ? * s.base_price
+        WHERE b.booking_id = ?
+          AND b.user_id = ?
+          AND b.status = 'pending'
+          AND b.booking_id NOT IN (SELECT booking_id FROM payments)
+    `;
+
+    db.query(sql, [
+        number_of_tickets,
+        number_of_tickets,
+        booking_id,
+        userId
+    ], (err, result) => {
+        if (err) return res.status(500).json(err);
+
+        if (result.affectedRows === 0) {
+            return res.json({
+                error: true,
+                message: 'Không thể sửa vé'
+            });
+        }
+
+        res.json({ success: true });
+    });
+});
+
+app.post('/api/user/update-tickets', checkLogin, (req, res) => {
+    const { booking_id, number_of_tickets } = req.body;
+
+    if (number_of_tickets <= 0) {
+        return res.json({ error: true, message: 'Số vé không hợp lệ' });
+    }
+
+    const sql = `
+        UPDATE bookings b
+        JOIN schedules s ON b.schedule_id = s.schedule_id
+        SET 
+            b.number_of_tickets = ?,
+            b.total_price = ? * s.base_price
+        WHERE 
+            b.booking_id = ?
+            AND b.user_id = ?
+            AND b.status = 'pending'
+    `;
+
+    db.query(
+        sql,
+        [
+            number_of_tickets,
+            number_of_tickets,
+            booking_id,
+            req.session.user.user_id
+        ],
+        (err, result) => {
+            if (err || result.affectedRows === 0) {
+                return res.json({ error: true, message: 'Không thể sửa vé' });
+            }
+            res.json({ success: true });
+        }
+    );
+});
+app.post('/api/user/change-schedule', checkLogin, (req, res) => {
+    const { booking_id, new_schedule_id } = req.body;
+
+    db.query(
+        `UPDATE bookings 
+         SET schedule_id = ? 
+         WHERE booking_id = ? 
+           AND user_id = ? 
+           AND status = 'pending'`,
+        [new_schedule_id, booking_id, req.session.user.user_id],
+        (err, result) => {
+            if (err) {
+                console.error(err);
+                return res.json({ error: true });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.json({ error: true, message: 'Không thể đổi ngày' });
+            }
+
+            res.json({ success: true });
+        }
+    );
+});
+
+app.post('/api/user/cancel-booking', (req, res) => {
+    const userId = req.session.user.user_id;
+    const { booking_id } = req.body;
+
+    const sql = `
+        UPDATE bookings
+        SET status = 'cancelled'
+        WHERE booking_id = ?
+          AND user_id = ?
+          AND status = 'pending'
+          AND booking_id NOT IN (SELECT booking_id FROM payments)
+    `;
+
+    db.query(sql, [booking_id, userId], (err, result) => {
+        if (err) return res.status(500).json(err);
+
+        if (result.affectedRows === 0) {
+            return res.json({
+                error: true,
+                message: 'Không thể hủy vé (vé đã thanh toán hoặc đã xác nhận)'
+            });
+        }
+
+        res.json({ success: true });
+    });
+});
+
+app.post('/api/user/change-date', (req, res) => {
+    const userId = req.session.user.user_id;
+    const { booking_id, new_schedule_id } = req.body;
+
+    const sql = `
+        UPDATE bookings b
+        JOIN schedules s ON s.schedule_id = ?
+        SET 
+            b.schedule_id = s.schedule_id,
+            b.total_price = b.number_of_tickets * s.base_price
+        WHERE b.booking_id = ?
+          AND b.user_id = ?
+          AND b.status = 'pending'
+          AND b.booking_id NOT IN (SELECT booking_id FROM payments)
+    `;
+
+    db.query(sql, [new_schedule_id, booking_id, userId], (err, result) => {
+        if (err) return res.status(500).json(err);
+
+        if (result.affectedRows === 0) {
+            return res.json({
+                error: true,
+                message: 'Không thể đổi ngày'
+            });
+        }
+
         res.json({ success: true });
     });
 });

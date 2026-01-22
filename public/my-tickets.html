@@ -34,19 +34,101 @@
                     return;
                 }
                 container.innerHTML = data.map(t => `
-                    <div class="ticket">
-                        <div>
-                            <h3>${t.from_city} ➝ ${t.to_city}</h3>
-                            <p>Khởi hành: ${new Date(t.departure_time).toLocaleString('vi-VN')}</p>
-                            <p>Mã vé: <strong>#${t.booking_id}</strong></p>
-                        </div>
-                        <div style="text-align: right;">
-                            <span class="status ${t.status}">${t.status.toUpperCase()}</span>
-                            <p style="margin-top:10px; color: #d4af37; font-weight:bold;">${Number(t.total_price).toLocaleString()} đ</p>
-                        </div>
-                    </div>
-                `).join('');
+    <div class="ticket">
+        <div>
+            <h3>${t.from_city} ➝ ${t.to_city}</h3>
+            <p>Khởi hành: ${new Date(t.departure_time).toLocaleString('vi-VN')}</p>
+            <p>Mã vé: <strong>#${t.booking_id}</strong></p>
+            <p>Số vé: ${t.number_of_tickets}</p>
+        </div>
+        <div style="text-align: right;">
+            <span class="status ${t.status}">${t.status.toUpperCase()}</span>
+            <p style="margin-top:10px; color: #d4af37; font-weight:bold;">
+                ${Number(t.total_price).toLocaleString()} đ
+            </p>
+
+            ${t.status === 'pending' ? `
+                <button onclick="editTickets(${t.booking_id}, ${t.number_of_tickets})">✏️ Sửa vé</button>
+<button onclick="changeDate(${t.booking_id})">📅 Đổi ngày</button>
+<button onclick="cancelBooking(${t.booking_id})">❌ Hủy</button>
+
+            ` : ''}
+        </div>
+    </div>
+`).join('');
+
             });
+            // HỦY VÉ
+function cancelBooking(id) {
+    if (!confirm('Bạn chắc chắn muốn hủy vé #' + id + '?')) return;
+
+    fetch('/api/user/cancel-booking', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ booking_id: id })
+    })
+    .then(res => res.json())
+    .then(r => {
+        if (r.error) alert(r.message);
+        else location.reload();
+    });
+}
+
+
+// SỬA VÉ (sửa số lượng – đơn giản)
+function editBooking(id, currentQty) {
+    const newQty = prompt('Nhập số vé mới:', currentQty);
+    if (!newQty) return;
+
+    fetch('/api/user/update-booking', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `booking_id=${id}&number_of_tickets=${newQty}`
+    }).then(res => res.json())
+      .then(r => {
+          if (r.error) alert(r.message);
+          else location.reload();
+      });
+}
+function editTickets(id, currentQty) {
+    const newQty = prompt('Nhập số vé mới:', currentQty);
+    if (!newQty) return;
+
+    fetch('/api/user/update-tickets', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            booking_id: id,
+            number_of_tickets: newQty
+        })
+    })
+    .then(res => res.json())
+    .then(r => {
+        if (r.error) alert(r.message);
+        else location.reload();
+    });
+}
+function changeDate(bookingId) {
+    window.location.href = `/change-date.html?booking_id=${bookingId}`;
+}
+function changeDate(bookingId) {
+    const newSchedule = prompt('Nhập ID lịch trình mới:');
+    if (!newSchedule) return;
+
+    fetch('/api/user/change-date', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `booking_id=${bookingId}&new_schedule_id=${newSchedule}`
+    })
+    .then(res => res.json())
+    .then(r => {
+        if (r.error) alert(r.message);
+        else location.reload();
+    });
+}
+
+
     </script>
+    
 </body>
 </html>

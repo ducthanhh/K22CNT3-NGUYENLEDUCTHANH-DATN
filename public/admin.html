@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Hệ Thống Quản Trị |  Admin</title>
+    <title>Hệ Thống Quản Trị | Ocean Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -57,11 +57,13 @@
 <body>
 
     <div class="sidebar">
-        <h2> ADMIN</h2>
+        <h2>OCEAN ADMIN</h2>
         <div class="menu-item active" onclick="showTab('dashboard', this)"><i class="fas fa-home"></i> Tổng Quan</div>
         <div class="menu-item" onclick="showTab('ships', this)"><i class="fas fa-ship"></i> Quản Lý Tàu</div>
         <div class="menu-item" onclick="showTab('schedules', this)"><i class="fas fa-calendar-alt"></i> Quản Lý Lịch Trình</div>
         <div class="menu-item" onclick="showTab('bookings', this)"><i class="fas fa-ticket-alt"></i> Quản Lý Vé</div>
+        <div class="menu-item" onclick="showTab('contracts', this)"> <i class="fas fa-file-contract"></i> Quản Lý Hợp Đồng</div>
+
         <a href="/logout" class="menu-item" style="margin-top: auto; background: rgba(255,0,0,0.1); color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
     </div>
 
@@ -162,6 +164,26 @@
         </div>
 
     </div>
+    <div id="tab-contracts" class="section-tab">
+    <h1>Danh Sách Hợp Đồng</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Mã HĐ</th>
+                <th>Mã Booking</th>
+                <th>Khách Hàng</th>
+                <th>Email</th>
+                <th>Tổng Tiền</th>
+                <th>Trạng Thái</th>
+                <th>Ngày Chấp Thuận</th>
+            </tr>
+        </thead>
+        <tbody id="contract-list">
+        </tbody>
+    </table>
+</div>
+
 
     <script>
         // HÀM CHUYỂN TAB
@@ -260,6 +282,49 @@
                 loadStats();
             });
         }
+
+        function loadContracts() {
+    fetch('/api/admin/contracts')
+        .then(res => res.json())
+        .then(data => {
+            const tbody = document.getElementById('contract-list');
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">Chưa có hợp đồng.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.map(c => `
+                <tr>
+                    <td>#${c.contract_id}</td>
+                    <td>#${c.booking_id}</td>
+                    <td>${c.full_name}</td>
+                    <td>${c.email}</td>
+                    <td>${Number(c.total_price).toLocaleString()} ₫</td>
+                    <td>
+                        <span class="badge ${c.accepted ? 'bg-green' : 'bg-yellow'}">
+                            ${c.accepted ? 'Đã chấp thuận' : 'Chưa chấp thuận'}
+                        </span>
+                    </td>
+                    <td>
+                        ${c.accepted_at ? new Date(c.accepted_at).toLocaleString() : '-'}
+                    </td>
+                </tr>
+            `).join('');
+        });
+}
+function showTab(tabName, element) {
+    document.querySelectorAll('.section-tab').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+
+    document.getElementById('tab-' + tabName).classList.add('active');
+    element.classList.add('active');
+
+    if (tabName === 'contracts') {
+        loadContracts();
+    }
+}
+
     </script>
 </body>
 </html>
