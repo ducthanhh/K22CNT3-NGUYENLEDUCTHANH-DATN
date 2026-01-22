@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huyền Thoại Thác Bờ | Đức Thành Tour</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- COPY LẠI CÁC BIẾN CSS TỪ TRANG CHỦ ĐỂ ĐỒNG BỘ --- */
+        :root {
+            --primary: #0a2540;
+            --gold: #d4af37;
+            --white: #ffffff;
+            --text-gray: #555;
+            --bg-light: #f8f9fa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; color: var(--primary); line-height: 1.8; background: var(--bg-light); overflow-x: hidden; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        img { max-width: 100%; border-radius: 8px; }
+
+        /* HEADER (Giống trang chủ) */
+        header {
+            background-color: var(--primary);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        nav {
+            max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
+        }
+        .logo { font-size: 1.8rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: rgba(255,255,255,0.8); }
+        .nav-links a:hover { color: var(--gold); }
+        .btn-cta { padding: 10px 30px; background: var(--gold); color: var(--primary); border-radius: 50px; font-weight: 600; }
+
+        /* --- HERO INTRO --- */
+        .page-hero {
+            height: 60vh;
+            background: linear-gradient(rgba(10, 37, 64, 0.6), rgba(10, 37, 64, 0.8)), 
+                        url('https://images.unsplash.com/photo-1548574505-5e239809ee19?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white);
+            margin-bottom: 60px;
+        }
+        .page-hero h1 { font-size: 3.5rem; margin-bottom: 15px; }
+        .breadcrumb { font-size: 1rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- CONTENT SECTIONS --- */
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        
+        .story-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            margin-bottom: 100px;
+        }
+        
+        /* Đảo ngược vị trí ảnh/chữ cho layout so le */
+        .story-section.reverse { direction: rtl; } 
+        .story-section.reverse .text-box { direction: ltr; } /* Giữ văn bản trái sang phải */
+
+        .text-box h2 { font-size: 2.5rem; margin-bottom: 20px; color: var(--primary); position: relative; }
+        .text-box h2::after {
+            content: ''; display: block; width: 60px; height: 3px; background: var(--gold); margin-top: 10px;
+        }
+        .text-box p { color: var(--text-gray); margin-bottom: 20px; font-size: 1.05rem; text-align: justify; }
+        
+        .highlight-text {
+            border-left: 4px solid var(--gold);
+            padding-left: 20px;
+            font-style: italic;
+            color: var(--primary);
+            background: rgba(212, 175, 55, 0.1);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .img-box { position: relative; }
+        .img-box img { 
+            box-shadow: 20px 20px 0 rgba(212, 175, 55, 0.2); 
+            transition: 0.5s;
+        }
+        .story-section:hover .img-box img { transform: translateY(-10px); box-shadow: 10px 30px 30px rgba(0,0,0,0.15); }
+
+        /* --- INFO CARDS (Icons) --- */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 100px;
+        }
+        .info-card {
+            background: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+        .info-card:hover { transform: translateY(-10px); }
+        .info-card i { font-size: 3rem; color: var(--gold); margin-bottom: 20px; }
+        .info-card h3 { margin-bottom: 15px; }
+
+        /* --- FOOTER (Giữ nguyên) --- */
+        footer { background: #051a2e; color: rgba(255,255,255,0.7); padding: 40px 0; text-align: center; }
+
+        /* Animation Classes */
+        .reveal { opacity: 0; transform: translateY(50px); transition: 1s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .story-section { grid-template-columns: 1fr; gap: 30px; }
+            .story-section.reverse { direction: ltr; }
+            .info-grid { grid-template-columns: 1fr; }
+            .page-hero h1 { font-size: 2.2rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">Đức Thành Tour</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="index.html#tours">Hải Trình</a></li>
+                <li><a href="gioi-thieu.html" style="color: var(--gold);">Về Chúng Tôi</a></li>
+                <li><a href="/login">Đăng Nhập</a></li>
+            </ul>
+            <a href="index.html#booking" class="btn-cta">Đặt Vé Ngay</a>
+        </nav>
+    </header>
+
+    <div class="page-hero">
+        <div>
+            <span class="breadcrumb">Di sản & Tâm linh</span>
+            <h1>Đền Thác Bờ</h1>
+            <p>Tuyệt tác tâm linh giữa lòng hồ Hòa Bình</p>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div class="story-section reveal">
+            <div class="img-box">
+                <img src="https://th.bing.com/th/id/OIP.Sk5PPhJ0SPfr4tWVxuaWcgHaE7?w=250&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="Vị trí đền Thác Bờ">
+            </div>
+            <div class="text-box">
+                <h2>Vị Trí Địa Lý Độc Đáo</h2>
+                <p>
+                    Đền Thác Bờ không chỉ là một ngôi đền, mà là một quần thể di tích nằm uy nghi trên đỉnh đồi Hang Thần, thuộc xóm Phố Bờ, xã Vầy Nưa, huyện Đà Bắc, tỉnh Hòa Bình.
+                </p>
+                <p>
+                    Vị trí của đền được coi là "Tọa sơn hướng thủy", lưng tựa vào núi đá vôi hùng vĩ, mặt hướng ra lòng hồ sông Đà mênh mông sóng nước. Vào mùa nước nổi, ngôi đền như một hòn đảo ngọc bồng bềnh giữa đại dương xanh thẳm của núi rừng Tây Bắc.
+                </p>
+            </div>
+        </div>
+
+        <div class="story-section reverse reveal">
+            <div class="img-box">
+                <img src="https://th.bing.com/th/id/OIP.Tscbe3M9PyH_4E63EY540AHaEu?w=277&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="Bà Chúa Thác Bờ">
+            </div>
+            <div class="text-box">
+                <h2>Lịch Sử & Huyền Thoại</h2>
+                <p>
+                    Đền thờ <strong>Bà Chúa Thác Bờ</strong> (tên húy là Đinh Thị Vân), một người con gái Mường gan dạ và tài ba. Tương truyền, bà là người đã có công giúp vua Lê Lợi lo liệu quân lương, thuyền bè vượt thác Bờ tiến quân dẹp loạn đèo Cát Hãn.
+                </p>
+                <div class="highlight-text">
+                    "Sau khi mất, bà thường hiển linh giúp dân vượt qua những con thác ghềnh hiểm trở, phù hộ cho mưa thuận gió hòa. Nhân dân tôn bà là Bà Chúa Thác Bờ và lập đền thờ phụng đời đời."
+                </div>
+                <p>
+                    Đây là điểm tựa tâm linh quan trọng không chỉ của người dân bản địa mà còn của du khách thập phương cầu mong bình an và tài lộc.
+                </p>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; margin-bottom: 50px;" class="reveal">Thông Tin Mùa Lễ Hội</h2>
+        <div class="info-grid reveal">
+            <div class="info-card">
+                <i class="fas fa-calendar-alt"></i>
+                <h3>Thời Gian</h3>
+                <p>Lễ hội chính thức diễn ra từ ngày <strong>7 tháng Giêng</strong> và kéo dài đến hết tháng 3 Âm lịch hàng năm.</p>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-pray"></i>
+                <h3>Hoạt Động</h3>
+                <p>Gồm các nghi thức rước kiệu, tế lễ linh thiêng, hầu đồng và các trò chơi dân gian mang đậm bản sắc dân tộc Mường.</p>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-ship"></i>
+                <h3>Di Chuyển</h3>
+                <p>Du khách sẽ di chuyển bằng tàu từ bến Thung Nai khoảng 20 phút để đến đền, thưởng ngoạn cảnh đẹp "Hạ Long trên cạn".</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 80px;" class="reveal">
+            <h2 style="margin-bottom: 20px;">Bạn Đã Sẵn Sàng Chiêm Bái?</h2>
+            <p style="margin-bottom: 30px; color: #666;">Đặt tour ngay hôm nay để nhận ưu đãi và giữ chỗ tốt nhất cho hành trình tâm linh của bạn.</p>
+            <a href="index.html#booking" class="btn-cta" style="padding: 15px 50px; font-size: 1.2rem;">Đặt Lịch Ngay</a>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>© 2025 Đức Thành Tour - Kết nối di sản sông Đà</p>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', reveal);
+        function reveal() {
+            var reveals = document.querySelectorAll('.reveal');
+            for (var i = 0; i < reveals.length; i++) {
+                var windowheight = window.innerHeight;
+                var revealtop = reveals[i].getBoundingClientRect().top;
+                var revealpoint = 150;
+                if (revealtop < windowheight - revealpoint) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+        reveal(); // Chạy ngay lần đầu
+    </script>
+</body>
+</html>

@@ -3,36 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi Tiết: Đền Thác Bờ</title>
+    <title>Đền Thác Bờ - Tâm Linh Sông Đà | Đức Thành Tour</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background: #f4f4f4; }
-        .container { max-width: 800px; margin: 20px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        .header-img { width: 100%; height: 400px; object-fit: cover; border-radius: 8px; }
-        h1 { color: #2c3e50; }
-        .price { color: #e74c3c; font-size: 1.5em; font-weight: bold; }
-        .btn-back { display: inline-block; padding: 10px 20px; background: #333; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+        /* --- CSS CORE (Đồng bộ với trang chủ) --- */
+        :root {
+            --primary: #0a2540;
+            --gold: #d4af37;
+            --white: #ffffff;
+            --text-dark: #333;
+            --bg-light: #f4f7f9;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; color: var(--text-dark); line-height: 1.7; background: var(--bg-light); }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; color: var(--primary); }
+
+        /* Navigation */
+        header { background: var(--primary); padding: 15px 0; position: sticky; top: 0; z-index: 1000; }
+        nav { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--gold); text-transform: uppercase; }
+        .nav-links a { color: white; text-decoration: none; margin-left: 25px; font-size: 0.9rem; transition: 0.3s; }
+        .nav-links a:hover { color: var(--gold); }
+
+        /* Detail Hero */
+        .detail-hero {
+            height: 50vh;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        .detail-hero::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 37, 64, 0.5);
+        }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-content h1 { color: white; font-size: 3.5rem; margin-bottom: 10px; }
+
+        /* Content Layout */
+        .container { max-width: 1100px; margin: 60px auto; padding: 0 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
+        
+        .main-content img { width: 100%; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .main-content h2 { font-size: 2rem; margin: 30px 0 15px; border-left: 5px solid var(--gold); padding-left: 15px; }
+        .main-content p { margin-bottom: 20px; text-align: justify; color: #555; }
+
+        /* Sidebar Card */
+        .sidebar { position: sticky; top: 100px; height: fit-content; }
+        .booking-card {
+            background: white; padding: 30px; border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.05); border: 1px solid #eee;
+        }
+        .price-box { font-size: 1.5rem; color: var(--gold); font-weight: bold; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .btn-book {
+            display: block; width: 100%; padding: 15px; background: var(--gold); color: var(--primary);
+            text-align: center; font-weight: bold; border-radius: 8px; text-decoration: none; transition: 0.3s;
+        }
+        .btn-book:hover { background: var(--primary); color: white; }
+
+        /* Features */
+        .feature-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 30px 0; }
+        .feature-item { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
+        .feature-item i { color: var(--gold); }
+
+        footer { background: #051a2e; color: white; text-align: center; padding: 40px 0; margin-top: 60px; }
+
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+            .hero-content h1 { font-size: 2.5rem; }
+        }
     </style>
 </head>
 <body>
+
+    <header>
+        <nav>
+            <a href="index.html" class="logo">Đức Thành Tour</a>
+            <div class="nav-links">
+                <a href="index.html">Trang Chủ</a>
+                <a href="index.html#tours">Hải Trình</a>
+                <a href="gioi-thieu.html">Giới Thiệu</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="detail-hero" style="background-image: url('https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&w=1500&q=80');">
+        <div class="hero-content">
+            <h1>Đền Thác Bờ</h1>
+            <p>Hành trình tâm linh giữa kỳ quan sông nước</p>
+        </div>
+    </section>
+
     <div class="container">
-        <img src="https://th.bing.com/th/id/OIP.Sk5PPhJ0SPfr4tWVxuaWcgHaE7?w=286&h=190&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="Đền Thác Bờ" class="header-img">
-        
-        <h1>Tour Tâm Linh: Đền Thác Bờ</h1>
-        <p class="price">Giá tour: 500.000 VNĐ/khách</p>
-        <hr>
-        
-        <h3>Giới thiệu</h3>
-        <p>Đền Thác Bờ thờ bà chúa Thác Bờ (Đinh Thị Vân), người có công giúp vua Lê Lợi dẹp loạn và giúp dân trị thủy. Đây là điểm đến tâm linh nổi tiếng nằm giữa lòng hồ Hòa Bình, mang vẻ đẹp uy nghiêm và tĩnh lặng.</p>
+        <div class="main-content">
+            <img src="https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&w=1000&q=80" alt="Đền Thác Bờ">
+            
+            <h2>Vẻ đẹp linh thiêng</h2>
+            <p>Đền Thác Bờ thờ Bà Chúa Thác Bờ là bà Đinh Thị Vân người dân tộc Mường và một bà người dân tộc Dao. Hai bà đã có công giúp vua Lê Lợi về quân lương, thuyền bè vượt thác Bờ tiến quân dẹp loạn tại đèo Cát Hãn.</p>
+            
+            <h2>Trải nghiệm nổi bật</h2>
+            <div class="feature-list">
+                <div class="feature-item"><i class="fas fa-check-circle"></i> Chiêm bái động Thác Bờ</div>
+                <div class="feature-item"><i class="fas fa-check-circle"></i> Đi tàu trên hồ Hòa Bình</div>
+                <div class="feature-item"><i class="fas fa-check-circle"></i> Thưởng thức cá nướng đặc sản</div>
+                <div class="feature-item"><i class="fas fa-check-circle"></i> Ngắm nhìn 101 hòn đảo nhỏ</div>
+            </div>
 
-        <h3>Lịch trình nổi bật</h3>
-        <ul>
-            <li>Di chuyển bằng thuyền trên lòng hồ ngắm cảnh sơn thủy hữu tình.</li>
-            <li>Lễ Đền Trình và Đền Chúa Thác Bờ.</li>
-            <li>Khám phá Động Thác Bờ với hệ thống thạch nhũ tuyệt đẹp.</li>
-            <li>Thưởng thức đặc sản cá nướng sông Đà ngay tại chân đền.</li>
-        </ul>
+            <p>Đền nằm trong hệ thống các điểm du lịch của hồ Hòa Bình. Du khách đến đây không chỉ để cầu nguyện bình an, tài lộc mà còn để thả mình vào không gian tĩnh mịch, hùng vĩ của mây trời Tây Bắc.</p>
+        </div>
 
-        <a href="index.html" class="btn-back">← Quay lại trang chủ</a>
+        <div class="sidebar">
+            <div class="booking-card">
+                <div class="price-box">Từ 500.000 VNĐ</div>
+                <p style="margin-bottom: 20px; font-size: 0.9rem; color: #666;">Giá bao gồm: Tàu vận chuyển, vé tham quan, bảo hiểm du lịch.</p>
+                <a href="index.html#booking" class="btn-book">ĐẶT TOUR NGAY</a>
+                <div style="margin-top: 20px; font-size: 0.8rem; color: #999; text-align: center;">
+                    <i class="fas fa-phone"></i> Hỗ trợ 24/7: 1900 1234
+                </div>
+            </div>
+        </div>
     </div>
+
+    <footer>
+        <p>© 2025 Đức Thành Tour | Đền Thác Bờ - Hòa Bình</p>
+    </footer>
+
 </body>
 </html>
