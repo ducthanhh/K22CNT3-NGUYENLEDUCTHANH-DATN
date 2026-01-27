@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liên Hệ | Đức Thành Tour</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #0a2540;
+            --gold: #d4af37;
+            --white: #ffffff;
+            --text-gray: #555;
+            --bg-light: #f8f9fa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; color: var(--primary); line-height: 1.8; background: var(--bg-light); overflow-x: hidden; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+
+        /* HEADER */
+        header {
+            background-color: var(--primary);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        nav {
+            max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
+        }
+        .logo { font-size: 1.8rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: rgba(255,255,255,0.8); }
+        .nav-links a:hover { color: var(--gold); }
+        .btn-cta { padding: 10px 30px; background: var(--gold); color: var(--primary); border-radius: 50px; font-weight: 600; cursor: pointer; border: none; }
+
+        /* HERO */
+        .page-hero {
+            height: 40vh;
+            background: linear-gradient(rgba(10, 37, 64, 0.7), rgba(10, 37, 64, 0.9)), 
+                        url('https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white);
+        }
+        .page-hero h1 { font-size: 3rem; }
+
+        /* CONTACT CONTENT */
+        .container { max-width: 1200px; margin: 80px auto; padding: 0 20px; }
+        
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+
+        /* Info Side */
+        .contact-info h2 { font-size: 2.2rem; margin-bottom: 30px; }
+        .info-item { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 30px; }
+        .info-item i { 
+            width: 50px; height: 50px; background: var(--gold); color: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; font-size: 1.2rem; flex-shrink: 0;
+        }
+        .info-item h3 { font-size: 1.1rem; margin-bottom: 5px; }
+        .info-item p { color: var(--text-gray); }
+
+        /* Form Side */
+        .contact-form {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px;
+            font-family: inherit; font-size: 1rem;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--gold);
+        }
+
+        /* Map Section */
+        .map-container {
+            width: 100%; height: 450px; border-radius: 12px; overflow: hidden;
+            margin-bottom: 80px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* FOOTER */
+        footer { background: #051a2e; color: rgba(255,255,255,0.7); padding: 40px 0; text-align: center; }
+
+        /* Animation */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 992px) {
+            .contact-wrapper { grid-template-columns: 1fr; }
+            .page-hero h1 { font-size: 2.2rem; }
+        }
+        /* --- 6. FOOTER --- */
+        .main-footer {
+            background: #051a2e;
+            color: rgba(255,255,255,0.7);
+            padding-top: 80px;
+            font-size: 0.95rem;
+            border-top: 5px solid var(--gold);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+        }
+
+        .footer-col h3, .footer-col h4 {
+            color: var(--white);
+            margin-bottom: 25px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a { color: rgba(255,255,255,0.6); transition: 0.3s; }
+        .footer-col ul li a:hover { color: var(--gold); padding-left: 8px; }
+
+        .social-links a {
+            display: inline-flex;
+            width: 40px; height: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            color: var(--white);
+            transition: 0.3s;
+        }
+        .social-links a:hover { background: var(--gold); border-color: var(--gold); color: var(--primary); }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 30px 10px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">Đức Thành Tour</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="index.html#tours">Hải Trình</a></li>
+                <li><a href="gioi-thieu.html">Về Chúng Tôi</a></li>
+                <li><a href="lien-he.html" style="color: var(--gold);">Liên Hệ</a></li>
+            </ul>
+            <a href="index.html#booking" class="btn-cta">Đặt Vé Ngay</a>
+        </nav>
+    </header>
+
+    <div class="page-hero">
+        <div class="reveal active">
+            <h1>Kết Nối Với Chúng Tôi</h1>
+            <p style="color: var(--gold);">Đức Thành Tour luôn sẵn sàng lắng nghe bạn</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="contact-wrapper">
+            <div class="contact-info reveal">
+                <h2>Thông Tin Liên Hệ</h2>
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h3>Địa Chỉ</h3>
+                        <p>Cảng tàu du lịch Thung Nai, huyện Cao Phong, tỉnh Hòa Bình</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <div>
+                        <h3>Hotline Đặt Vé</h3>
+                        <p>0975157823</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <h3>Email</h3>
+                        <p>info@ducthanhtour.vn</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <h3>Giờ Làm Việc</h3>
+                        <p>Thứ 2 - Chủ Nhật: 06:00 - 22:00</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form reveal">
+                <form action="#">
+                    <div class="form-group">
+                        <label>Họ và Tên</label>
+                        <input type="text" placeholder="Nhập tên của bạn..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Số Điện Thoại</label>
+                        <input type="tel" placeholder="Nhập số điện thoại..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Chủ Đề</label>
+                        <input type="text" placeholder="Bạn cần hỗ trợ về vấn đề gì?">
+                    </div>
+                    <div class="form-group">
+                        <label>Lời Nhắn</label>
+                        <textarea rows="5" placeholder="Nội dung chi tiết..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-cta" style="width: 100%; padding: 15px;">Gửi Yêu Cầu</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="map-container reveal">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3731.848529341406!2d105.23936647596005!3d20.716173098440597!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3134017777777777%3A0x7c77777777777777!2zVGh1bmcgTmFpLCBIb8OgIELDrG5o!5e0!3m2!1svi!2svn!4v1700000000000!5m2!1svi!2svn" 
+                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+            </iframe>
+        </div>
+    </div>
+
+     </footer>
+
+    <footer id="about" class="main-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>ĐỨC THÀNH TOUR</h3>
+                <p>
+                    Đức Thành Tour chuyên cung cấp dịch vụ du lịch tàu tham quan
+                    sông Đà – Thung Nai – Đền Thác Bờ với trải nghiệm an toàn,
+                    chuyên nghiệp và đẳng cấp.
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Liên Kết Nhanh</h4>
+                <ul>
+                    <li><a href="#home"><i class="fas fa-angle-right"></i> Trang chủ</a></li>
+                    <li><a href="#tours"><i class="fas fa-angle-right"></i> Lịch trình</a></li>
+                    <li><a href="#booking"><i class="fas fa-angle-right"></i> Đặt vé</a></li>
+                    <li><a href="gioi-thieu.html"><i class="fas fa-angle-right"></i> Về chúng tôi</a></li>
+                    <li><a href="/login"><i class="fas fa-angle-right"></i> Đăng nhập</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Thông Tin Liên Hệ</h4>
+                <p><i class="fas fa-map-marker-alt" style="color: var(--gold); width: 20px;"></i> Thung Nai, Cao Phong, Hòa Bình</p>
+                <p><i class="fas fa-phone-alt" style="color: var(--gold); width: 20px;"></i> Hotline: 1900 1234</p>
+                <p><i class="fas fa-envelope" style="color: var(--gold); width: 20px;"></i> ducthanhtour@gmail.com</p>
+                <p><i class="fas fa-clock" style="color: var(--gold); width: 20px;"></i> 07:00 – 21:00</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Kết Nối</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 Đức Thành Tour | Website đặt lịch tàu du lịch sông Đà</p>
+        </div>
+    
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', reveal);
+        function reveal() {
+            var reveals = document.querySelectorAll('.reveal');
+            for (var i = 0; i < reveals.length; i++) {
+                var windowheight = window.innerHeight;
+                var revealtop = reveals[i].getBoundingClientRect().top;
+                var revealpoint = 100;
+                if (revealtop < windowheight - revealpoint) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+        reveal();
+    </script>
+</body>
+</html>

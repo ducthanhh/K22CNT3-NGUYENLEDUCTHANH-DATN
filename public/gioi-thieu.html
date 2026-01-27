@@ -132,6 +132,55 @@
             .page-hero h1 { font-size: 2.2rem; }
             .nav-links { display: none; }
         }
+                /* --- 6. FOOTER --- */
+        .main-footer {
+            background: #051a2e;
+            color: rgba(255,255,255,0.7);
+            padding-top: 80px;
+            font-size: 0.95rem;
+            border-top: 5px solid var(--gold);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+        }
+
+        .footer-col h3, .footer-col h4 {
+            color: var(--white);
+            margin-bottom: 25px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a { color: rgba(255,255,255,0.6); transition: 0.3s; }
+        .footer-col ul li a:hover { color: var(--gold); padding-left: 8px; }
+
+        .social-links a {
+            display: inline-flex;
+            width: 40px; height: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            color: var(--white);
+            transition: 0.3s;
+        }
+        .social-links a:hover { background: var(--gold); border-color: var(--gold); color: var(--primary); }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 30px 10px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
@@ -219,8 +268,53 @@
 
     </div>
 
-    <footer>
-        <p>© 2025 Đức Thành Tour - Kết nối di sản sông Đà</p>
+     </footer>
+
+    <footer id="about" class="main-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>ĐỨC THÀNH TOUR</h3>
+                <p>
+                    Đức Thành Tour chuyên cung cấp dịch vụ du lịch tàu tham quan
+                    sông Đà – Thung Nai – Đền Thác Bờ với trải nghiệm an toàn,
+                    chuyên nghiệp và đẳng cấp.
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Liên Kết Nhanh</h4>
+                <ul>
+                    <li><a href="#home"><i class="fas fa-angle-right"></i> Trang chủ</a></li>
+                    <li><a href="#tours"><i class="fas fa-angle-right"></i> Lịch trình</a></li>
+                    <li><a href="#booking"><i class="fas fa-angle-right"></i> Đặt vé</a></li>
+                    <li><a href="gioi-thieu.html"><i class="fas fa-angle-right"></i> Về chúng tôi</a></li>
+                    <li><a href="/login"><i class="fas fa-angle-right"></i> Đăng nhập</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Thông Tin Liên Hệ</h4>
+                <p><i class="fas fa-map-marker-alt" style="color: var(--gold); width: 20px;"></i> Thung Nai, Cao Phong, Hòa Bình</p>
+                <p><i class="fas fa-phone-alt" style="color: var(--gold); width: 20px;"></i> Hotline: 1900 1234</p>
+                <p><i class="fas fa-envelope" style="color: var(--gold); width: 20px;"></i> ducthanhtour@gmail.com</p>
+                <p><i class="fas fa-clock" style="color: var(--gold); width: 20px;"></i> 07:00 – 21:00</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Kết Nối</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 Đức Thành Tour | Website đặt lịch tàu du lịch sông Đà</p>
+        </div>
+    
     </footer>
 
     <script>

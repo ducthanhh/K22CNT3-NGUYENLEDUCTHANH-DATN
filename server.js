@@ -37,6 +37,11 @@ function checkLogin(req, res, next) {
     else res.redirect('/login');
 }
 
+app.get('/profile', checkLogin, (req, res) => {
+    res.sendFile(__dirname + '/public/profile.html');
+});
+
+
 function checkAdmin(req, res, next) {
     if (req.session.user && req.session.user.role === 'admin') next();
     else res.send(`<script>alert('Bạn không phải Admin!'); window.location.href='/';</script>`);
@@ -179,6 +184,107 @@ app.get('/api/admin/contracts', checkLogin, checkAdmin, (req, res) => {
         ORDER BY c.created_at DESC
     `;
     db.query(sql, (err, results) => res.json(results));
+});
+
+app.get('/api/admin/customers', checkLogin, checkAdmin, (req, res) => {
+    const sql = `
+        SELECT 
+            u.user_id,
+            u.full_name,
+            u.email,
+            u.phone,
+            COUNT(b.booking_id) AS total_bookings,
+            IFNULL(SUM(
+                CASE WHEN b.status = 'confirmed' 
+                THEN b.total_price ELSE 0 END
+            ), 0) AS total_spent
+        FROM users u
+        LEFT JOIN bookings b ON u.user_id = b.user_id
+        WHERE u.role = 'customer'
+        GROUP BY u.user_id
+        ORDER BY total_spent DESC
+    `;
+
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.json([]);
+        }
+        res.json(results);
+    });
+});
+
+app.get('/api/admin/customer/:id', checkLogin, checkAdmin, (req, res) => {
+    const userId = req.params.id;
+
+    const sqlUser = `
+        SELECT user_id, full_name, email, phone
+        FROM users
+        WHERE user_id = ? AND role='customer'
+    `;
+
+    const sqlBookings = `
+        SELECT 
+            booking_id,
+            booking_date,
+            number_of_tickets,
+            total_price,
+            status
+        FROM bookings
+        WHERE user_id = ?
+        ORDER BY booking_date DESC
+    `;
+
+    db.query(sqlUser, [userId], (err, users) => {
+        if (err || users.length === 0) {
+            return res.json(null);
+        }
+
+        db.query(sqlBookings, [userId], (err, bookings) => {
+            res.json({
+                customer: users[0],
+                bookings
+            });
+        });
+    });
+});
+
+app.get('/api/admin/customer-stats', checkLogin, checkAdmin, (req, res) => {
+    const sqlTotal = `
+        SELECT COUNT(*) AS total_customers 
+        FROM users WHERE role='customer'
+    `;
+
+    const sqlTopBookings = `
+        SELECT u.full_name, COUNT(b.booking_id) AS total
+        FROM users u
+        JOIN bookings b ON u.user_id = b.user_id
+        GROUP BY u.user_id
+        ORDER BY total DESC
+        LIMIT 1
+    `;
+
+    const sqlTopSpent = `
+        SELECT u.full_name, SUM(b.total_price) AS spent
+        FROM users u
+        JOIN bookings b ON u.user_id = b.user_id
+        WHERE b.status='confirmed'
+        GROUP BY u.user_id
+        ORDER BY spent DESC
+        LIMIT 1
+    `;
+
+    db.query(sqlTotal, (e1, r1) => {
+        db.query(sqlTopBookings, (e2, r2) => {
+            db.query(sqlTopSpent, (e3, r3) => {
+                res.json({
+                    total_customers: r1[0].total_customers,
+                    top_booking_customer: r2[0] || null,
+                    top_spent_customer: r3[0] || null
+                });
+            });
+        });
+    });
 });
 
 
@@ -335,10 +441,59 @@ app.get('/api/all-bookings', checkLogin, checkAdmin, (req, res) => {
 });
 
 // --- API CHO KHÁCH HÀNG ---
-app.get('/api/current-user', (req, res) => res.json(req.session.user || null));
+app.get('/api/current-user', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json(null);
+    }
+    res.json(req.session.user);
+});
+
 app.get('/api/my-booking-history', checkLogin, (req, res) => {
     const sql = `SELECT b.booking_id, p1.city as from_city, p2.city as to_city, b.status, b.total_price, s.departure_time FROM bookings b JOIN schedules s ON b.schedule_id = s.schedule_id JOIN routes r ON s.route_id = r.route_id JOIN ports p1 ON r.origin_port_id = p1.port_id JOIN ports p2 ON r.destination_port_id = p2.port_id WHERE b.user_id = ? ORDER BY b.booking_date DESC`;
     db.query(sql, [req.session.user.user_id], (err, results) => res.json(results));
+});
+
+app.post('/api/user/update-profile', checkLogin, (req, res) => {
+    const userId = req.session.user.user_id;
+    const { full_name, phone, password } = req.body;
+
+    if (!full_name || !phone) {
+        return res.json({ success: false, message: 'Thiếu dữ liệu' });
+    }
+
+    let sql, params;
+
+    // Nếu có đổi mật khẩu
+    if (password && password.trim() !== '') {
+        sql = `
+            UPDATE users
+            SET full_name = ?, phone = ?, password = ?
+            WHERE user_id = ? AND role = 'customer'
+        `;
+        params = [full_name, phone, password, userId];
+    } else {
+        sql = `
+            UPDATE users
+            SET full_name = ?, phone = ?
+            WHERE user_id = ? AND role = 'customer'
+        `;
+        params = [full_name, phone, userId];
+    }
+
+    db.query(sql, params, (err, result) => {
+        if (err || result.affectedRows === 0) {
+            return res.json({ success: false });
+        }
+
+        // 🔥 Cập nhật lại session
+        req.session.user.full_name = full_name;
+        req.session.user.phone = phone;
+
+        res.json({ success: true });
+    });
+});
+app.get('/profile', checkLogin, (req, res) => {
+    res.sendFile(__dirname + '/public/profile.html');
 });
 
 // --- CÁC API QUẢN TRỊ NÂNG CAO ---

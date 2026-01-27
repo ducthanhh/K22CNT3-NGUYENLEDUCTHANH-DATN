@@ -250,6 +250,8 @@ tr:last-child td { border-bottom: none; }
         <div class="menu-item" onclick="showTab('schedules', this)"><i class="fas fa-calendar-alt"></i> Quản Lý Lịch Trình</div>
         <div class="menu-item" onclick="showTab('bookings', this)"><i class="fas fa-ticket-alt"></i> Quản Lý Vé</div>
         <div class="menu-item" onclick="showTab('contracts', this)"> <i class="fas fa-file-contract"></i> Quản Lý Hợp Đồng</div>
+        <div class="menu-item" onclick="showTab('customers', this)"><i class="fas fa-users"></i> Quản Lý Khách Hàng</div>
+
 
         <a href="/logout" class="menu-item" style="margin-top: auto; background: rgba(255,0,0,0.1); color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
     </div>
@@ -350,8 +352,7 @@ tr:last-child td { border-bottom: none; }
             </table>
         </div>
 
-    </div>
-    <div id="tab-contracts" class="section-tab">
+          <div id="tab-contracts" class="section-tab">
     <h1>Danh Sách Hợp Đồng</h1>
 
     <table>
@@ -370,16 +371,59 @@ tr:last-child td { border-bottom: none; }
         </tbody>
     </table>
 </div>
+<div id="tab-customers" class="section-tab">
+    <h1>Quản Lý Khách Hàng</h1>
+
+    <!-- THỐNG KÊ -->
+    <div class="stats-container">
+        <div class="card">
+            <i class="fas fa-users"></i>
+            <div>
+                <h3 id="stat-customers">0</h3>
+                <p>Tổng Khách Hàng</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <i class="fas fa-ticket-alt"></i>
+            <div>
+                <h3 id="stat-top-booking">-</h3>
+                <p>Khách Đặt Nhiều Nhất</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <i class="fas fa-coins"></i>
+            <div>
+                <h3 id="stat-top-spent">-</h3>
+                <p>Khách Chi Nhiều Nhất</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- BẢNG KHÁCH -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên Khách</th>
+                <th>Email</th>
+                <th>SĐT</th>
+                <th>Số Lần Đặt</th>
+                <th>Tổng Chi</th>
+                <th>Chi Tiết</th>
+            </tr>
+        </thead>
+        <tbody id="customer-list"></tbody>
+    </table>
+</div>
+
+    </div>
+  
 
 
     <script>
-        // HÀM CHUYỂN TAB
-        function showTab(tabName, element) {
-            document.querySelectorAll('.section-tab').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-' + tabName).classList.add('active');
-            element.classList.add('active');
-        }
+     
 
         // TẢI DỮ LIỆU KHI TRANG LOAD
         document.addEventListener('DOMContentLoaded', () => {
@@ -510,6 +554,79 @@ function showTab(tabName, element) {
     if (tabName === 'contracts') {
         loadContracts();
     }
+
+    if (tabName === 'customers') {
+        loadCustomers();
+        loadCustomerStats();
+    }
+}
+
+
+function loadCustomers() {
+    fetch('/api/admin/customers')
+        .then(res => res.json())
+        .then(data => {
+            const tbody = document.getElementById('customer-list');
+
+            tbody.innerHTML = data.map(c => `
+                <tr>
+                    <td>#${c.user_id}</td>
+                    <td>${c.full_name}</td>
+                    <td>${c.email}</td>
+                    <td>${c.phone}</td>
+                    <td>${c.total_bookings}</td>
+                    <td>${Number(c.total_spent).toLocaleString()} ₫</td>
+                    <td>
+                        <button class="action-btn btn-approve"
+                            onclick="viewCustomer(${c.user_id})">
+                            Xem
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        });
+}
+
+function loadCustomerStats() {
+    fetch('/api/admin/customer-stats')
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('stat-customers').innerText = data.total_customers;
+
+            document.getElementById('stat-top-booking').innerText =
+                data.top_booking_customer
+                ? data.top_booking_customer.full_name
+                : '-';
+
+            document.getElementById('stat-top-spent').innerText =
+                data.top_spent_customer
+                ? data.top_spent_customer.full_name
+                : '-';
+        });
+}
+
+function viewCustomer(id) {
+    fetch('/api/admin/customer/' + id)
+        .then(res => res.json())
+        .then(data => {
+            if (!data) return alert('Không tìm thấy khách');
+
+            let text = `
+Tên: ${data.customer.full_name}
+Email: ${data.customer.email}
+SĐT: ${data.customer.phone}
+
+--- DANH SÁCH VÉ ---
+`;
+
+            data.bookings.forEach(b => {
+                text += `
+#${b.booking_id} | ${b.status} | ${Number(b.total_price).toLocaleString()} ₫
+`;
+            });
+
+            alert(text);
+        });
 }
 
     </script>

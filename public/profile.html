@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Tin Cá Nhân | Đức Thành Tour</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #0a2540;
+            --gold: #d4af37;
+            --white: #ffffff;
+            --text-gray: #555;
+            --overlay: rgba(10, 37, 64, 0.85);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Thay URL bên dưới bằng ảnh hồ Hòa Bình hoặc Thác Bờ của bạn */
+            background: linear-gradient(var(--overlay), var(--overlay)), 
+                        url('https://images.unsplash.com/photo-1502920513543-d03808403010?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--gold);
+            backdrop-filter: blur(10px); /* Hiệu ứng kính mờ nhẹ */
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-header i {
+            font-size: 3.5rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .divider {
+            width: 50px;
+            height: 2px;
+            background: var(--gold);
+            margin: 15px auto;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid #ddd;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            transition: 0.3s;
+            background: white;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        input:disabled {
+            background: #f8f9fa;
+            color: #888;
+            cursor: not-allowed;
+            border-style: dashed;
+        }
+
+        .btn-save {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            background: var(--gold);
+            color: var(--primary);
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-save:hover {
+            background: #c29d2e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: var(--primary);
+            font-size: 0.9rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--gold);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="profile-header">
+        <i class="fas fa-user-circle"></i>
+        <h2>Thông Tin Cá Nhân</h2>
+        <div class="divider"></div>
+    </div>
+
+    <div class="form-group">
+        <label><i class="fas fa-signature"></i> Họ tên</label>
+        <input id="full_name" type="text" placeholder="Nhập họ và tên của bạn">
+    </div>
+
+    <div class="form-group">
+        <label><i class="fas fa-envelope"></i> Email (Định danh)</label>
+        <input id="email" type="email" disabled>
+    </div>
+
+    <div class="form-group">
+        <label><i class="fas fa-phone"></i> Số điện thoại</label>
+        <input id="phone" type="tel" placeholder="Nhập số điện thoại liên lạc">
+    </div>
+
+    <div class="form-group">
+        <label><i class="fas fa-lock"></i> Mật khẩu mới</label>
+        <input id="password" type="password" placeholder="Bỏ trống nếu giữ nguyên">
+    </div>
+
+    <button class="btn-save" onclick="save()">
+        <i class="fas fa-check-circle"></i> Lưu Thay Đổi
+    </button>
+
+    <a href="index.html" class="back-link">
+        <i class="fas fa-long-arrow-alt-left"></i> Quay lại trang chủ
+    </a>
+</div>
+
+<script>
+    // Logic lấy dữ liệu người dùng
+    fetch('/api/current-user')
+        .then(res => res.json())
+        .then(u => {
+            if (!u) {
+                location.href = '/login';
+            } else {
+                document.getElementById('full_name').value = u.full_name || '';
+                document.getElementById('email').value = u.email || '';
+                document.getElementById('phone').value = u.phone || '';
+            }
+        })
+        .catch(err => console.error("Lỗi lấy thông tin:", err));
+
+    // Logic lưu thay đổi
+    function save() {
+        const full_name = document.getElementById('full_name').value;
+        const phone = document.getElementById('phone').value;
+        const password = document.getElementById('password').value;
+
+        if(!full_name || !phone) {
+            alert("Vui lòng điền đủ Họ tên và Số điện thoại!");
+            return;
+        }
+
+        fetch('/api/user/update-profile', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ full_name, phone, password })
+        })
+        .then(res => res.json())
+        .then(r => {
+            if(r.success) {
+                alert('✅ Chúc mừng! Thông tin của bạn đã được cập nhật.');
+            } else {
+                alert('❌ Có lỗi xảy ra. Vui lòng thử lại sau.');
+            }
+            document.getElementById('password').value = '';
+        });
+    }
+</script>
+
+</body>
+</html>
